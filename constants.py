@@ -1,3 +1,3 @@
 COMMANDS = (
-    'run'
+    'run', 'version'
 )

@@ -3,19 +3,30 @@ import logging
 import os
 import sys
 
+import constants
+from commands.run import execute_run
+
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('commit-analysis')
 
 # borrowed as a resolution from https://github.com/pre-commit/pre-commit/issues/217
 os.environ.pop('__PYVENV_LAUNCHER__', None)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def add_command_option(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        'command', choices=constants.COMMANDS
+    )
 
 
-# Press the green button in the gutter to run the script.
+def parse_and_delegate(parser: argparse.ArgumentParser) -> None:
+    args = parser.parse_args()
+    logger.info(args.command)
+    if args.command == "run":
+        execute_run()
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    parser = argparse.ArgumentParser(prog='commit-analysis')
+    add_command_option(parser)
+    parse_and_delegate(parser)
